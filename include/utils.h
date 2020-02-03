@@ -23,10 +23,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-typedef uint8_t bool;
-typedef uint8_t boolean;
-typedef uint8_t byte;
-
 #define true  0x1
 #define false 0x0
 
@@ -35,7 +31,8 @@ typedef uint8_t byte;
 #define cbi(reg, bit)        ( reg &= ~_bv(bit) )                      // Clear bit
 #define tbi(reg, bit)        ( reg ^= _bv(bit) )                       // Toggle bit
 #define wbi(reg, bit, value) ( value ? sbi(reg, bit) : cbi(reg, bit) ) // Write bit
-#define rbi(reg, bit)        ( (reg >> bit) & 0x1 )                    // Read bit
+//#define rbi(reg, bit)        ( (reg >> bit) & 0x1 )                    // Read bit
+#define rbi(reg, bit)        ( reg & (1<<bit) )                    // Read bit
 
 #define PI         3.1415926535897932384626433832795028841971693993751
 #define DEG_TO_RAD 0.0174532925199432957692369076848861271344287188854
