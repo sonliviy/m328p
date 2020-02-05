@@ -1,38 +1,25 @@
-/*
- *  Copyright (c) 2014 Álan Crístoffer
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
+#ifdef __GNUC__
+#include "avr/io.h"
+#include "avr/interrupt.h"
+#include "avr/cpufunc.h"
+#elif __ICCAVR__
+#include "ioavr.h"
+#include "inavr.h"
+#endif
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
+#include "usi_twi.h"
 
-#include "utils.h"
-#include "usi.h"
+// Sample TWI transmission commands
+#define TWI_CMD_MASTER_WRITE 0x10
+#define TWI_CMD_MASTER_READ 0x20
+#define TWI_CMD_MASTER_WRITE_ALOT 0x30
 
 int main(void)
 {
-    while(1){
-
+    uint8_t b[] = {1,2,3,4,5};
+    twi_slave_init(0x10,b,5);
+    sei();
+    for (;;) {
     }
+    return 0;
 }
-
-
-
