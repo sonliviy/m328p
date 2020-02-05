@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(PROG_TYPE arduino)
-set(USBPORT /dev/ttyUSB0)
+set(USBPORT /dev/ttyUSB1)
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
 set(PROG_ARGS -b 19200 -P ${USBPORT})
 
 # Variables regarding the AVR chip
 set(MCU   attiny85)
-set(F_CPU 8000000)
+set(F_CPU 1000000)
 set(BAUD  9600)
 add_definitions(-DF_CPU=${F_CPU})
 #add_definitions(-D__AVR_ATtiny85__)
@@ -67,7 +67,7 @@ endforeach()
 
 # Compiler flags
 set(CSTANDARD "-std=gnu99")
-set(CDEBUG    "-gstabs -g -ggdb")
+set(CDEBUG    "-gstabs -g -ggdb -DDEBUG")
 set(CWARN     "-Wall -Wstrict-prototypes -Wl,--gc-sections -Wl,--relax")
 set(CTUNING   "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -ffunction-sections -fdata-sections")
 set(COPT      "-O3 -lm -lprintf_flt")
@@ -92,11 +92,7 @@ add_custom_target(hex   ALL     ${OBJCOPY} -R .eeprom -O ihex "${PROJECT_NAME}.e
 add_custom_target(eeprom        ${OBJCOPY} -j .eeprom --change-section-lma .eeprom=0 -O ihex "${PROJECT_NAME}.elf" "${PROJECT_NAME}.eeprom" DEPENDS strip)
 add_custom_target(disassemble   ${OBJDUMP} -S "${PROJECT_NAME}.elf" > "${PROJECT_NAME}.lst" DEPENDS strip)
 # Flashing targets
-add_custom_target(flash         ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -D -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
-add_custom_target(flash_usbtiny ${AVRDUDE} -c usbtiny -p ${MCU} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
-add_custom_target(flash_usbasp  ${AVRDUDE} -c usbasp -p ${MCU} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
-add_custom_target(flash_ardisp  ${AVRDUDE} -c avrisp -p ${MCU} -b 19200 -P ${USBPORT} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
-add_custom_target(flash_109     ${AVRDUDE} -c avr109 -p ${MCU} -b 9600 -P ${USBPORT} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
+add_custom_target(flash         ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U flash:w:${PROJECT_NAME}.hex DEPENDS hex)
 add_custom_target(flash_eeprom  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U eeprom:w:${PROJECT_NAME}.hex DEPENDS eeprom)
 # Fuses (For ATMega328P-PU, Calculated using http://eleccelerator.com/fusecalc/fusecalc.php?chip=atmega328p)
 add_custom_target(reset         ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -e)
@@ -108,6 +104,8 @@ add_custom_target(set_eeprom_save_fuse   ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${
 add_custom_target(clear_eeprom_save_fuse ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -U hfuse:w:0xD9:m)
 # Utilities targets
 add_custom_target(avr_terminal  ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS} -nt)
+add_custom_target(size ${AVRSIZE} -C --mcu=${MCU} "${PROJECT_NAME}.elf")
+add_custom_target(checkout ${AVRDUDE} -c ${PROG_TYPE} -p ${MCU} ${PROG_ARGS})
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_NAME}.hex;${PROJECT_NAME}.eeprom;${PROJECT_NAME}.lst")
 
