@@ -22,6 +22,12 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+#include <stdint.h>
+#include <stddef.h>
+
+typedef uint8_t bool;
+typedef uint8_t boolean;
+typedef uint8_t byte;
 
 #define true  0x1
 #define false 0x0
@@ -31,8 +37,7 @@
 #define cbi(reg, bit)        ( reg &= ~_bv(bit) )                      // Clear bit
 #define tbi(reg, bit)        ( reg ^= _bv(bit) )                       // Toggle bit
 #define wbi(reg, bit, value) ( value ? sbi(reg, bit) : cbi(reg, bit) ) // Write bit
-//#define rbi(reg, bit)        ( (reg >> bit) & 0x1 )                    // Read bit
-#define rbi(reg, bit)        ( reg & (1<<bit) )                    // Read bit
+#define rbi(reg, bit)        ( (reg >> bit) & 0x1 )                    // Read bit
 
 #define PI         3.1415926535897932384626433832795028841971693993751
 #define DEG_TO_RAD 0.0174532925199432957692369076848861271344287188854
@@ -46,8 +51,13 @@
 #define max(a, b)                                    ( (a) > (b) ? (a) : (b) )
 #define abs(x)                                       ( (x) > 0 ? (x) : -(x) )
 #define constrain(amt, low, high)                    ( (amt) < (low) ? (low) : ( (amt) > (high) ? (high) : (amt) ) )
-#define round(x)                                     ( (x) >= 0 ? (long) ( (x) + 0.5 ) : (long) ( (x) - 0.5 ) )
+//#define round(x)                                     ( (x) >= 0 ? (long) ( (x) + 0.5 ) : (long) ( (x) - 0.5 ) )
 #define radians(deg)                                 ( (deg) * DEG_TO_RAD )
 #define degrees(rad)                                 ( (rad) * RAD_TO_DEG )
 #define map(value, in_min, in_max, out_min, out_max) ( (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min )
 #endif
+
+int8_t atohex(const char * ascii, uint8_t * hex, size_t maxsize);
+char * hextoa(const uint8_t * hex, char * ascii);
+char * hextoa_bend16(const uint8_t * hex, char * ascii);
+char * hextoan(const uint8_t * hex, char * ascii, uint8_t len);
