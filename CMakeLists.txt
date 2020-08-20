@@ -71,7 +71,7 @@ set(CSTANDARD "-std=gnu99")
 set(CDEBUG    "-gstabs -g -ggdb -DDEBUG")
 set(CWARN     "-Wall -Wstrict-prototypes -Wl,--gc-sections -Wl,--relax")
 set(CTUNING   "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -ffunction-sections -fdata-sections")
-set(COPT      "-O3 -lm -lprintf_flt")
+set(COPT      "-Wl,-u,vfprintf -lprintf_flt -lm")
 set(CMCU      "-mmcu=${MCU}")
 set(CDEFS     "-DF_CPU=${F_CPU} -DBAUD=${BAUD}")
 
