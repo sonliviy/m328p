@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(PROG_TYPE arduino)
-set(USBPORT /dev/ttyUSB0)
+set(USBPORT /dev/ttyUSB1)
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
 set(PROG_ARGS -b 57600 -P ${USBPORT})
 
 # Variables regarding the AVR chip
 set(MCU   atmega328p)
 set(F_CPU 16000000)
-set(BAUD  9600)
+set(BAUD  115200)
 add_definitions(-DF_CPU=${F_CPU})
 #add_definitions(-D__AVR_ATtiny85__)
 
@@ -49,7 +49,7 @@ file(GLOB SRC_FILES "${SRC_PATH}/*.cpp"
 set(LIB_SRC_FILES)
 set(LIB_INC_PATH)
 #set(LIBRAIRES)
-#list(APPEND LIBRARIES "${LIB_DIR_PATH}/nrf24l01p")
+list(APPEND LIBRARIES "${LIB_DIR_PATH}/4digdisplay")
 list(APPEND LIBRARIES "${LIB_DIR_PATH}/uart")
 foreach(subdir ${LIBRARIES})
     file(GLOB lib_files "${subdir}/*.cpp"
